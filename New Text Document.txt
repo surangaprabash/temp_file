@@ -1,0 +1,35 @@
+db.posts.updateOne( { title: "Post Title 1" }, { $set: { likes: 2 } } ) 
+
+
+db.orders.aggregate([
+  { $match: { status: "confirmed" } }
+])
+
+
+db.orders.aggregate([
+  {
+    $group: {
+      _id: "$customer",
+      totalSpent: {
+        $sum: { $multiply: ["$items.price", "$items.quantity"] }
+      }
+    }
+  }
+])
+
+db.orders.aggregate([
+  { $sort: { order_date: -1 } }
+])
+
+db.orders.aggregate([
+  {
+    $addFields: {
+      totalItems: { $size: "$items" }
+    }
+  }
+])
+
+db.orders.aggregate([
+  { $match: { status: "confirmed" } },
+  { $count: "confirmed_orders" }
+])
