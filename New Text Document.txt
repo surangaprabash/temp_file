@@ -1,35 +1,47 @@
-db.posts.updateOne( { title: "Post Title 1" }, { $set: { likes: 2 } } ) 
+db.students.updateOne({name:"Eva"}, {$set: {grade: 90}})
 
+db.students.updateOne({name:"David"}, {$inc: {grade: 5}})
 
-db.orders.aggregate([
-  { $match: { status: "confirmed" } }
-])
+db.students.deleteMany({grade: {$lt: 65}})
 
+db.students.deleteOne({course: "Math"})
 
-db.orders.aggregate([
-  {
-    $group: {
-      _id: "$customer",
-      totalSpent: {
-        $sum: { $multiply: ["$items.price", "$items.quantity"] }
-      }
-    }
-  }
-])
+db.students.find({grade: {$gt: 85}})
 
-db.orders.aggregate([
-  { $sort: { order_date: -1 } }
-])
+db.students.find({city: "Colombo", grade: {$gt: 80}})
 
-db.orders.aggregate([
-  {
-    $addFields: {
-      totalItems: { $size: "$items" }
-    }
-  }
-])
+db.students.find({$or: [{city: "Kandy"}, {city: "Galle"}]})
 
-db.orders.aggregate([
-  { $match: { status: "confirmed" } },
-  { $count: "confirmed_orders" }
-])
+db.students.find({course: {$ne: "Physics"}})
+
+db.students.find({age: {$gte: 22, $lte: 25}})
+
+db.students.aggregate([{$match: {course: "Math"}}])
+
+db.students.aggregate([{$project: {_id: 0, name: 1, grade: 1}}])
+
+db.students.aggregate([{$group: {_id: "$course", avgGrade: {$avg: "$grade"}}}])
+
+db.students.aggregate([{$sort: {grade: -1}}])
+
+db.students.aggregate([{$sort: {grade: -1}}, {$skip: 3}])
+
+db.students.aggregate([{$sort: {grade: -1}}, {$limit: 5}])
+
+db.students.updateMany({}, {$set: {hobbies: ["reading","sports"]}}); db.students.aggregate([{$unwind: "$hobbies"}])
+
+db.students.aggregate([{$match: {course: "Biology"}}, {$out: "biologyStudents"}])
+
+db.students.aggregate([{$group: {_id: null, totalGrade: {$sum: "$grade"}}}])
+
+db.students.aggregate([{$match: {course: "Physics"}}, {$count: "physicsCount"}])
+
+db.students.aggregate([{$match: {course: "Math"}}, {$group: {_id: null, minGrade: {$min: "$grade"}}}])
+
+db.students.aggregate([{$match: {course: "Biology"}}, {$group: {_id: null, maxGrade: {$max: "$grade"}}}])
+
+db.students.aggregate([{$sort: {enrollDate: 1}}, {$limit: 1}])
+
+db.students.aggregate([{$sort: {enrollDate: -1}}, {$limit: 1}])
+
+db.students.aggregate([{$match: {city: "Colombo"}}, {$group: {_id: null, avgGrade: {$avg: "$grade"}}}])
